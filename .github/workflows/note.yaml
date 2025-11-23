@@ -90,7 +90,7 @@ jobs:
           name: research-artifacts
           path: |
             .note-artifacts/research.md
-
+            
   write:
     name: Write (Claude Sonnet 4.0)
     needs: research
