@@ -71,6 +71,9 @@ jobs:
           npm init -y
           npm i @anthropic-ai/claude-code
 
+      - name: Install Claude Code SDK (local)
+        run: npm install @anthropic-ai/claude-code
+
       - name: Research with Claude Code SDK
         run: |
           cat > research.mjs <<'EOF'
