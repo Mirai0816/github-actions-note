@@ -560,17 +560,14 @@ jobs:
             page = await context.newPage();
             page.setDefaultTimeout(180000);
 
-            await page.goto(START_URL, { waitUntil: 'networkidle' });
+            await page.goto(START_URL, { waitUntil: 'domcontentloaded' });
             
-            // 제목 입력칸 후보를 여러 개 잡아서, 보이는 첫 번째 요소에 제목을 채운다
-            const titleBox = page
-              .locator('textarea[placeholder*="タイトル"], textarea[placeholder*="タイトルを入力"], input[placeholder*="タイトル"], textarea, input')
-              .first();
-            
-            await titleBox.waitFor({ state: 'visible', timeout: 180000 });
+            // 제목 입력칸이 보일 때까지 대기 후, 제목 입력
+            const titleBox = page.getByRole('textbox', { name: '記事タイトル' });
+            await titleBox.waitFor({ state: 'visible' });
             await titleBox.fill(TITLE);
 
-            const bodyBox = page.locator('div[contenteditable="true"][role="textbox"]').first();
+            const bodyBox = page.getByRole('paragraph').first();
             await bodyBox.waitFor({ state: 'visible' });
             const htmlAll = htmlFromMarkdown(preBody);
             let pasted = false;
