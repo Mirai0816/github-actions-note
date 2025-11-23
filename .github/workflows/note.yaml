@@ -560,9 +560,15 @@ jobs:
             page = await context.newPage();
             page.setDefaultTimeout(180000);
 
-            await page.goto(START_URL, { waitUntil: 'domcontentloaded' });
-            await page.waitForSelector('textarea[placeholder*="タイトル"]');
-            await page.fill('textarea[placeholder*="タイトル"]', TITLE);
+            await page.goto(START_URL, { waitUntil: 'networkidle' });
+            
+            // 제목 입력칸 후보를 여러 개 잡아서, 보이는 첫 번째 요소에 제목을 채운다
+            const titleBox = page
+              .locator('textarea[placeholder*="タイトル"], textarea[placeholder*="タイトルを入力"], input[placeholder*="タイトル"], textarea, input')
+              .first();
+            
+            await titleBox.waitFor({ state: 'visible', timeout: 180000 });
+            await titleBox.fill(TITLE);
 
             const bodyBox = page.locator('div[contenteditable="true"][role="textbox"]').first();
             await bodyBox.waitFor({ state: 'visible' });
